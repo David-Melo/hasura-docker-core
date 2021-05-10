@@ -1,0 +1,57 @@
+version: '3.6'
+
+networks:
+  api:
+    driver: bridge
+
+services:
+
+  postgres:
+    container_name: postgres
+    image: postgres:12
+    restart: always
+    networks:
+      - api
+    ports: 
+      - 5432:5432
+    volumes:
+      - ../data/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_ROOT}
+
+  hasura:
+    container_name: hasura
+    image: hasura/graphql-engine:v2.0.0-alpha.10
+    restart: always
+    networks: 
+      - api
+    ports:
+      - 8080:8080
+    environment:
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD_ROOT}@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: ${HASURA_GRAPHQL_ENABLE_CONSOLE}
+      HASURA_GRAPHQL_DEV_MODE: ${HASURA_GRAPHQL_DEV_MODE}
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: ${HASURA_GRAPHQL_ENABLED_LOG_TYPES}
+      #HASURA_GRAPHQL_JWT_SECRET: ${HASURA_GRAPHQL_JWT_SECRET}
+    depends_on:
+      - postgres
+
+  hasura_console:
+    container_name: hasura_console
+    build:
+      context: ./hasura_console
+    restart: always
+    networks: 
+      - api
+    ports:
+      - 9693:9693
+      - 9695:9695
+    volumes: 
+      - ../data/migrations/hasura:/opt/hasura
+    environment: 
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
+      HASURA_RUN_CONSOLE: ${HASURA_RUN_CONSOLE}
+    depends_on:
+      - hasura
+    tty: true

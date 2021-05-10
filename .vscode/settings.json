@@ -1,0 +1,4 @@
+{
+    "docker.commands.composeUp": "docker-compose -p lam ${configurationFile} --env-file ./docker/.env up ${detached} ${build}",
+    "docker.commands.composeDown": "docker-compose -p lam ${configurationFile} --env-file ./docker/.env down"
+}
