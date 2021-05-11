@@ -6,6 +6,25 @@ networks:
 
 services:
 
+  sails:
+    container_name: sails
+    build:
+      context: ./sails
+      args: 
+        NODE_ENV: local
+    restart: always
+    networks: 
+      - api
+    ports:
+      - 1337:1337
+    volumes: 
+      - ../sails:/opt/app
+    environment: 
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD_ROOT}@postgres:5432/postgres
+    depends_on:
+      - hasura
+    tty: true
+
   postgres:
     container_name: postgres
     image: postgres:12
