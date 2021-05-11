@@ -67,7 +67,7 @@ services:
       - 9693:9693
       - 9695:9695
     volumes: 
-      - ../data/migrations/hasura:/opt/hasura
+      - ../data/hasura:/opt/hasura
     environment: 
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_RUN_CONSOLE: ${HASURA_RUN_CONSOLE}

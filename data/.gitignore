@@ -1,4 +1,5 @@
 *
 !.gitignore
-!migrations
-!migrations/**/*
+!hasura
+!hasura/**/*
+.DS_STORE
